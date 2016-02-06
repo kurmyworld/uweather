@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.uweather.app.db.UWeatherOpenHelper;
 
@@ -152,6 +153,6 @@ public class UWeatherDB {
         }
         if(cursor!=null)
             cursor.close();
-        return null;
+        return list;
     }
 }
