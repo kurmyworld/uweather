@@ -1,6 +1,8 @@
 package com.uweather.app.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -52,6 +54,20 @@ public class ChooseAreaActivity extends AppCompatActivity {
     private City selectedCity;
     //当前选中的级别
     private int currentLevel;
+    //是否从其他Activity回来的
+    private boolean isfromActivity;
+
+    /**
+     * 启动ChooseAreaActivity
+     * @param context
+     * @param isfromActivity
+     */
+    public static void actionActivity(Context context,Boolean isfromActivity){
+        Intent intent = new Intent(context,ChooseAreaActivity.class);
+        if (isfromActivity)
+            intent.putExtra("isfromActivity",isfromActivity);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +75,8 @@ public class ChooseAreaActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.choose_area);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if (preferences.getBoolean("city_selected",false)){
+        isfromActivity = getIntent().getBooleanExtra("isfromActivity",false);
+        if (preferences.getBoolean("city_selected",false) && !isfromActivity){
             WeatherActivity.actionActivity(ChooseAreaActivity.this,null);
             finish();
         }
@@ -227,6 +244,9 @@ public class ChooseAreaActivity extends AppCompatActivity {
         }else if (currentLevel == LEVEL_CITY){
             queryProvinces();
         }else{
+            if (isfromActivity){
+                WeatherActivity.actionActivity(ChooseAreaActivity.this,null);
+            }
             finish();
         }
     }

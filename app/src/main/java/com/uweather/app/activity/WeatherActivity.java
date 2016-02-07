@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,11 +18,13 @@ import com.uweather.app.util.HttpUtil;
 import com.uweather.app.util.LogUtil;
 import com.uweather.app.util.Utility;
 
+import org.w3c.dom.Text;
+
 
 /**
  * Created by ringr on 2016/2/7.
  */
-public class WeatherActivity extends AppCompatActivity {
+public class WeatherActivity extends AppCompatActivity implements View.OnClickListener {
 
     private LinearLayout weatherInfoLayout;
     //显示城市名
@@ -36,6 +39,10 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView temp2Text;
     //显示更新时间
     private TextView currentDateText;
+    //刷新天气信息
+    private Button refresh;
+    //切换城市
+    private Button switchCity;
 
     /**
      * 启动Activity
@@ -61,7 +68,11 @@ public class WeatherActivity extends AppCompatActivity {
         temp1Text = (TextView)findViewById(R.id.temp1);
         temp2Text = (TextView)findViewById(R.id.temp2);
         currentDateText = (TextView)findViewById(R.id.current_date);
+        switchCity = (Button)findViewById(R.id.switch_city);
+        refresh = (Button)findViewById(R.id.refresh_weather);
         String countyCode = getIntent().getStringExtra("county_code");
+        switchCity.setOnClickListener(this);
+        refresh.setOnClickListener(this);
         if (!TextUtils.isEmpty(countyCode)){
             publishText.setText("同步中...");
             weatherInfoLayout.setVisibility(View.INVISIBLE);
@@ -103,7 +114,6 @@ public class WeatherActivity extends AppCompatActivity {
             public void onFinish(final String response) {
                 if ("countyCode".equals(type)) {
                     if (!TextUtils.isEmpty(response)) {
-                        LogUtil.d("weatherCode",response);
                         String[] array = response.split("\\|");
                         if (array != null && array.length == 2) {
                             String weatherCode = array[1];
@@ -112,7 +122,6 @@ public class WeatherActivity extends AppCompatActivity {
                     }
                 } else if ("weatherCode".equals(type)) {
                     Utility.handleWeatherResponse(WeatherActivity.this, response);
-                    LogUtil.d("WeatherActivity", response);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -147,5 +156,24 @@ public class WeatherActivity extends AppCompatActivity {
         currentDateText.setText(prefs.getString("current_date", ""));
         weatherInfoLayout.setVisibility(View.VISIBLE);
         cityNameText.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.switch_city:
+                ChooseAreaActivity.actionActivity(WeatherActivity.this, true);
+                finish();
+                break;
+            case R.id.refresh_weather:
+                publishText.setText("同步中...");
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+                String weatherCode = prefs.getString("weather_code","");
+                if (!TextUtils.isEmpty(weatherCode))
+                    queryWeatherInfo(weatherCode);
+                break;
+            default:
+                break;
+        }
     }
 }
