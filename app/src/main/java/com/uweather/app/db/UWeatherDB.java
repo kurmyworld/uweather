@@ -1,14 +1,14 @@
-package com.uweather.app.model;
+package com.uweather.app.db;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.uweather.app.db.UWeatherOpenHelper;
+import com.uweather.app.model.City;
+import com.uweather.app.model.County;
+import com.uweather.app.model.Province;
 
-import java.net.ContentHandler;
 import java.util.ArrayList;
 import java.util.List;
 

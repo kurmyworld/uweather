@@ -1,10 +1,11 @@
 package com.uweather.app.activity;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,12 +17,11 @@ import com.uweather.app.R;
 import com.uweather.app.model.City;
 import com.uweather.app.model.County;
 import com.uweather.app.model.Province;
-import com.uweather.app.model.UWeatherDB;
+import com.uweather.app.db.UWeatherDB;
 import com.uweather.app.util.HttpCallbackListener;
 import com.uweather.app.util.HttpUtil;
 import com.uweather.app.util.Utility;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +32,6 @@ public class ChooseAreaActivity extends AppCompatActivity {
     public static final int LEVEL_PROVINCE = 0;
     public static final int LEVEL_CITY = 1;
     public static final int LEVEL_COUNTY = 2;
-
 
     private ProgressDialog progressDialog;
     private TextView titleText;
@@ -59,6 +58,11 @@ public class ChooseAreaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.choose_area);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getBoolean("city_selected",false)){
+            WeatherActivity.actionActivity(ChooseAreaActivity.this,null);
+            finish();
+        }
         listView = (ListView)findViewById(R.id.list_view);
         titleText = (TextView)findViewById(R.id.title_text);
         adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,dataList);
@@ -73,6 +77,10 @@ public class ChooseAreaActivity extends AppCompatActivity {
                 }else if (currentLevel == LEVEL_CITY){
                     selectedCity =  cityList.get(position);
                     queryCounties();
+                }else if (currentLevel == LEVEL_COUNTY){
+                    String countyCode = countyList.get(position).getCountyCode();
+                    WeatherActivity.actionActivity(ChooseAreaActivity.this, countyCode);
+                    finish();
                 }
             }
         });
@@ -143,7 +151,6 @@ public class ChooseAreaActivity extends AppCompatActivity {
         String address;
         if (!TextUtils.isEmpty(code)){
             address="http://www.weather.com.cn/data/list3/city"+code+".xml";
-            Log.d("ChooseAreaActivity",address);
         }else{
             address="http://www.weather.com.cn/data/list3/city.xml";
         }
