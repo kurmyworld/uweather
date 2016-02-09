@@ -1,13 +1,8 @@
 package com.uweather.app.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import com.uweather.app.db.UWeatherDB;
 import com.uweather.app.model.City;
@@ -18,7 +13,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.widget.Button;
 
 /**
  * Created by ringr on 2016/2/6.

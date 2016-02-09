@@ -77,7 +77,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         isfromActivity = getIntent().getBooleanExtra("isfromActivity",false);
         if (preferences.getBoolean("city_selected",false) && !isfromActivity){
-            WeatherActivity.actionActivity(ChooseAreaActivity.this,null);
+            WeatherActivity.actionActivity(ChooseAreaActivity.this, null);
             finish();
         }
         listView = (ListView)findViewById(R.id.list_view);
