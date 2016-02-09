@@ -105,8 +105,13 @@ public class WeatherActivity extends AppCompatActivity
      * 查询天气代号所对应的天气。
      */
     private void queryWeatherInfo(String weatherCode) {
+<<<<<<< HEAD
         String address = "https://api.heweather.com/x3/weather?cityid="+weatherCode+"&key=2d1fa4e29e7e4871994f03550cdeec64";
         LogUtil.d("WeatherActivity", address);
+=======
+        String address = "https://api.heweather.com/x3/weather?cityid="+weatherCode+"&key=更改为你的key";
+        LogUtil.d("WeatherActivity",address);
+>>>>>>> bcd3ed8bc3d297f3d735c86f13fa98bfd0a01956
         queryFromServer(address, "weatherCode");
     }
 
