@@ -96,7 +96,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * 查询天气代号所对应的天气。
      */
     private void queryWeatherInfo(String weatherCode) {
-        String address = "http://www.weather.com.cn/data/cityinfo/" + weatherCode + ".html";
+        String address = "https://api.heweather.com/x3/weather?cityid="+weatherCode+"&key=2d1fa4e29e7e4871994f03550cdeec64";
         LogUtil.d("WeatherActivity",address);
         queryFromServer(address, "weatherCode");
     }
@@ -117,7 +117,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
                     if (!TextUtils.isEmpty(response)) {
                         String[] array = response.split("\\|");
                         if (array != null && array.length == 2) {
-                            String weatherCode = array[1];
+                            String weatherCode = "CN"+array[1];
                             queryWeatherInfo(weatherCode);
                         }
                     }

@@ -4,8 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import com.uweather.app.db.UWeatherDB;
 import com.uweather.app.model.City;
@@ -16,6 +18,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.widget.Button;
 
 /**
  * Created by ringr on 2016/2/6.
@@ -85,21 +88,29 @@ public class Utility {
         }
         return false;
     }
+
     /**
-     * 解析服务器返回的JSON数据，并将解析出的数据存储到本地。
+     * 解析和处理服务器返回的天气数据
      */
-    public static void handleWeatherResponse(Context context, String response) {
+    public static void handleWeatherResponse(Context context,String response){
         try {
-            JSONObject jsonObject = new JSONObject(response);
-            JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
-            String cityName = weatherInfo.getString("city");
-            String weatherCode = weatherInfo.getString("cityid");
-            String temp1 = weatherInfo.getString("temp1");
-            String temp2 = weatherInfo.getString("temp2");
-            String weatherDesp = weatherInfo.getString("weather");
-            String publishTime = weatherInfo.getString("ptime");
-            saveWeatherInfo(context, cityName, weatherCode, temp1, temp2,
-                    weatherDesp, publishTime);
+            JSONArray array = new JSONObject(response).getJSONArray("HeWeather data service 3.0");
+            //获取城市基本信息
+            JSONObject basic = ((JSONObject)array.opt(0)).getJSONObject("basic");
+            String weathreId = basic.getString("id");
+            String city = basic.getString("city");
+            String[] update = basic.getJSONObject("update").getString("loc").split(" ");
+            //获取天气预报信息
+            JSONArray daily = ((JSONObject)array.opt(0)).getJSONArray("daily_forecast");
+            //获取第一天的信息（后期需要获取一周的信息）
+            JSONObject day = daily.getJSONObject(0);
+            JSONObject cond = day.getJSONObject("cond");
+            String desp = cond.getString("txt_d");
+            String night = cond.getString("txt_n");
+            JSONObject tmp = day.getJSONObject("tmp");
+            String max = tmp.getString("max");
+            String min = tmp.getString("min");
+            saveWeatherInfo(context,city,weathreId,max,min,desp,update);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -110,8 +121,9 @@ public class Utility {
      */
     public static void saveWeatherInfo(Context context, String cityName,
                                        String weatherCode, String temp1, String temp2, String weatherDesp,
-                                       String publishTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
+                                       String [] update) {
+        String date = update[0];
+        String time = update[1];
         SharedPreferences.Editor editor = PreferenceManager
                 .getDefaultSharedPreferences(context).edit();
         editor.putBoolean("city_selected", true);
@@ -120,8 +132,8 @@ public class Utility {
         editor.putString("temp1", temp1);
         editor.putString("temp2", temp2);
         editor.putString("weather_desp", weatherDesp);
-        editor.putString("publish_time", publishTime);
-        editor.putString("current_date", sdf.format(new Date()));
+        editor.putString("publish_time", time);
+        editor.putString("current_date", date);
         editor.commit();
     }
 }
