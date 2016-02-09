@@ -96,7 +96,7 @@ public class WeatherActivity extends AppCompatActivity implements View.OnClickLi
      * 查询天气代号所对应的天气。
      */
     private void queryWeatherInfo(String weatherCode) {
-        String address = "https://api.heweather.com/x3/weather?cityid="+weatherCode+"&key=2d1fa4e29e7e4871994f03550cdeec64";
+        String address = "https://api.heweather.com/x3/weather?cityid="+weatherCode+"&key=更改为你的key";
         LogUtil.d("WeatherActivity",address);
         queryFromServer(address, "weatherCode");
     }
