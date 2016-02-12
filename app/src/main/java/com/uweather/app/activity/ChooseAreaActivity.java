@@ -77,7 +77,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         isfromActivity = getIntent().getBooleanExtra("isfromActivity",false);
         if (preferences.getBoolean("city_selected",false) && !isfromActivity){
-            WeatherActivity.actionActivity(ChooseAreaActivity.this, null);
+            HomeActivity.actionActivity(ChooseAreaActivity.this, null);
             finish();
         }
         listView = (ListView)findViewById(R.id.list_view);
@@ -96,7 +96,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
                     queryCounties();
                 }else if (currentLevel == LEVEL_COUNTY){
                     String countyCode = countyList.get(position).getCountyCode();
-                    WeatherActivity.actionActivity(ChooseAreaActivity.this, countyCode);
+                    HomeActivity.actionActivity(ChooseAreaActivity.this, countyCode);
                     finish();
                 }
             }
@@ -245,7 +245,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
             queryProvinces();
         }else{
             if (isfromActivity){
-                WeatherActivity.actionActivity(ChooseAreaActivity.this,null);
+                HomeActivity.actionActivity(ChooseAreaActivity.this, null);
             }
             finish();
         }

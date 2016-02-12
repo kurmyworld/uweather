@@ -25,7 +25,7 @@
         <receiver android:name=".receiver.AutoUpdateReciver" />
 
         <activity
-            android:name=".activity.WeatherActivity"
+            android:name=".activity.HomeActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
